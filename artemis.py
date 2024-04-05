@@ -27,12 +27,19 @@ requests.post('http://localhost:5000/add', cookies=cookies, data={"csrf_token":t
 
 num_tasks=100
 while(num_tasks != 0):
-    num_tasks = int(requests.get('http://localhost:5000/api/num-queued-tasks').text)
+    url = 'http://localhost:5000/api/num-queued-tasks'
+    headers = {
+        'accept': 'application/json',
+        'x-api-token': '1',
+        'Content-Type': 'application/json'
+    }
+    response = requests.get(url, headers=headers)
+    num_tasks=int(response.text)
     print(num_tasks)
     time.sleep(30)
 
 # +str(int(i)+1)
-report_path = os.popen("sudo Artemis/scripts/export_emails --tag "+str(int(i)+1)).read()
+report_path = os.popen("sudo Artemis/scripts/export_reports --tag "+str(int(i)+1)).read()
 report_path = 'Artemis' + report_path[report_path.index('written to:')+12:-1] + '/' + target + '.html'
 time.sleep(30)
 os.system("mkdir "+sys.argv[1].replace('://', ''))
