@@ -32,8 +32,8 @@ while(num_tasks != 0):
     time.sleep(30)
 
 # +str(int(i)+1)
-report_path = os.popen("sudo /home/skaner/Artemis/scripts/export_emails --tag "+str(int(i)+1)).read()
-report_path = '/home/skaner/Artemis/' + report_path[report_path.index('written to:')+12:-1] + '/' + target + '.html'
+report_path = os.popen("sudo Artemis/scripts/export_emails --tag "+str(int(i)+1)).read()
+report_path = 'Artemis' + report_path[report_path.index('written to:')+12:-1] + '/' + target + '.html'
 time.sleep(30)
 os.system("mkdir "+sys.argv[1].replace('://', ''))
 os.system('sudo mv ' + report_path + ' ' + sys.argv[1].replace('://', '')+'art.html')
