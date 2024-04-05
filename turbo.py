@@ -179,8 +179,8 @@ class App(customtkinter.CTk):
             if(self.scrollable_frame_checkboxes2[i].get()):
                 os.system("mkdir "+target.replace('://', ''))
                 print('Starting WPPen for: '+target)
-                print("-> python wppen.py "+target+" > "+target.replace('://', '')+"/wppen.txt")
-                os.system("python wppen.py "+target+" > "+target.replace('://', '')+"/wppen.txt")
+                print("-> bin/python3 wppen.py "+target+" > "+target.replace('://', '')+"/wppen.txt")
+                os.system("bin/python3 wppen.py "+target+" > "+target.replace('://', '')+"/wppen.txt")
 
             # ZAP
             if(self.scrollable_frame_checkboxes4[i].get()):
@@ -188,14 +188,14 @@ class App(customtkinter.CTk):
                 print('Starting ZAP for: '+target)
                 print("-> sudo docker run -v $(pwd)/"+target.replace('://', '')+"/:/zap/wrk/:rw -t ghcr.io/zaproxy/zaproxy:stable zap-baseline.py -t "+target+" -r zap_report.html")
                 # zap-full-scan.py    <- podmień jeśli chcesz pełny skan
-                os.system("echo 'skaner' | sudo -S docker run -v $(pwd)/"+target.replace('://', '')+"/:/zap/wrk/:rw -t ghcr.io/zaproxy/zaproxy:stable zap-baseline.py -t "+target+" -r zap_report.html")
+                os.system("sudo docker run -v $(pwd)/"+target.replace('://', '')+"/:/zap/wrk/:rw -t ghcr.io/zaproxy/zaproxy:stable zap-baseline.py -t "+target+" -r zap_report.html")
             
             # Artemis
             if(self.scrollable_frame_checkboxes3[i].get()):
                 os.system("mkdir "+target.replace('://', ''))
                 print('Starting Artemis for: '+target)
-                print('python artemis.py ' + target)
-                os.system('python artemis.py ' + target)
+                print('bin/python3 artemis.py ' + target)
+                os.system('bin/python3 artemis.py ' + target)
 
             # OpenVAS
             if(self.scrollable_frame_checkboxes1[i].get()):
