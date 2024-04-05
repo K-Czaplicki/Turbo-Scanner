@@ -173,7 +173,7 @@ class App(customtkinter.CTk):
         self.update()
 
         for i in range(len(self.scrollable_frame_checkboxes1)):
-            target = (self.scrollable_frame_labels[i]._text).split(' ')[6]    # TODO fix nie na sztywno
+            target = (self.scrollable_frame_labels[i]._text).split(' ')[-1]    # TODO fix nie na sztywno
     
             # WPPen
             if(self.scrollable_frame_checkboxes2[i].get()):
@@ -201,6 +201,7 @@ class App(customtkinter.CTk):
             if(self.scrollable_frame_checkboxes1[i].get()):
                 os.system("mkdir "+target.replace('://', ''))
                 print('Starting OpenVAS for: '+target)
+                # nikto -o results.html -Format htm -Tuning x -h example.com
 
         self.start_scan_button.configure(text="Start scan")
         self.start_scan_button.configure(fg_color=color)

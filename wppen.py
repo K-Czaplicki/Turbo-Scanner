@@ -93,6 +93,8 @@ for j in range(len(plugins_name)):
 
 	if(plugins_version[j] != None):
 		for key, value in plugins_version[j].items():
+			if(key == "number" and len(value.split("."))==2):
+				plugins_version[j]['number'] = plugins_version[j]['number'] + ".0"
 			print('    '+key+': '+str(value))
 	else:
 		print('    number: ?')
