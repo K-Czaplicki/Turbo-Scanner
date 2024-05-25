@@ -193,15 +193,15 @@ class App(customtkinter.CTk):
             # Artemis
             if(self.scrollable_frame_checkboxes3[i].get()):
                 os.system("mkdir "+target.replace('://', ''))
-                print('Starting Artemis for: '+target)
+                print('Starting Artemis for: ' + target)
                 print('bin/python3 artemis.py ' + target)
                 os.system('bin/python3 artemis.py ' + target)
 
-            # OpenVAS
+            # Nikto
             if(self.scrollable_frame_checkboxes1[i].get()):
                 os.system("mkdir "+target.replace('://', ''))
-                print('Starting OpenVAS for: '+target)
-                # nikto -o results.html -Format htm -Tuning x -h example.com
+                print('Starting Nikto for: ' + target)
+                os.system("nikto/program/nikto.pl -o "+target.replace('://', '')+"/nikto.html -Format htm -Tuning x -h " + target)
 
         self.start_scan_button.configure(text="Start scan")
         self.start_scan_button.configure(fg_color=color)
@@ -248,12 +248,12 @@ class App(customtkinter.CTk):
                 label.grid(row=i-1, column=0, padx=20, pady=(0, 10), sticky="w")
                 self.scrollable_frame_labels.append(label)
 
-                checkbox1 = customtkinter.CTkCheckBox(master=self.scrollable_frame, text="OpenVas", font=customtkinter.CTkFont(size=15))
+                checkbox1 = customtkinter.CTkCheckBox(master=self.scrollable_frame, text="Nikto", font=customtkinter.CTkFont(size=15))
                 checkbox1.grid(row=i-1, column=1, padx=10, pady=(0, 10))
                 self.scrollable_frame_checkboxes1.append(checkbox1)
 
                 if re.match(r'^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$', target):
-                    # Enable only OpenVas checkbox for IPs
+                    # Enable only Nikto checkbox for IPs
                     checkbox2 = customtkinter.CTkCheckBox(master=self.scrollable_frame, text="WPPen", font=customtkinter.CTkFont(size=15), state="disabled")
                     checkbox2.grid(row=i-1, column=2, padx=10, pady=(0, 10))
                     self.scrollable_frame_checkboxes2.append(checkbox2)
