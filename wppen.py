@@ -35,7 +35,8 @@ target = 'http://wppentest.j.pl/'
 target = sys.argv[1]
 
 filename = target.replace('://', '')+'/wpscan'
-cmd = 'wpscan --url '+target+' --ignore-main-redirect --plugins-detection mixed -o '+filename+'.json -f json'
+# --plugins-detection mixed
+cmd = 'wpscan --url '+target+' --ignore-main-redirect -o '+filename+'.json -f json'
 #print(cmd+'\n')
 os.system(cmd)
 f = open(filename+'.json')

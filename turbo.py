@@ -174,13 +174,14 @@ class App(customtkinter.CTk):
 
         for i in range(len(self.scrollable_frame_checkboxes1)):
             target = (self.scrollable_frame_labels[i]._text).split(' ')[-1]    # TODO fix nie na sztywno
-    
+            send = 0
             # WPPen
             if(self.scrollable_frame_checkboxes2[i].get()):
                 os.system("mkdir "+target.replace('://', ''))
                 print('Starting WPPen for: '+target)
                 print("-> bin/python3 wppen.py "+target+" > "+target.replace('://', '')+"/wppen.txt")
                 os.system("bin/python3 wppen.py "+target+" > "+target.replace('://', '')+"/wppen.txt")
+                send = 1
 
             # ZAP
             if(self.scrollable_frame_checkboxes4[i].get()):
@@ -189,6 +190,7 @@ class App(customtkinter.CTk):
                 print("-> sudo docker run -v $(pwd)/"+target.replace('://', '')+"/:/zap/wrk/:rw -t ghcr.io/zaproxy/zaproxy:stable zap-baseline.py -t "+target+" -r zap_report.html")
                 # zap-full-scan.py    <- podmień jeśli chcesz pełny skan
                 os.system("sudo docker run -v $(pwd)/"+target.replace('://', '')+"/:/zap/wrk/:rw -t ghcr.io/zaproxy/zaproxy:stable zap-baseline.py -t "+target+" -r zap_report.html")
+                send = 1
             
             # Artemis
             if(self.scrollable_frame_checkboxes3[i].get()):
@@ -196,13 +198,21 @@ class App(customtkinter.CTk):
                 print('Starting Artemis for: ' + target)
                 print('bin/python3 artemis.py ' + target)
                 os.system('bin/python3 artemis.py ' + target)
+                send = 1
 
             # Nikto
             if(self.scrollable_frame_checkboxes1[i].get()):
                 os.system("mkdir "+target.replace('://', ''))
                 print('Starting Nikto for: ' + target)
                 os.system("nikto/program/nikto.pl -o "+target.replace('://', '')+"/nikto.html -Format htm -Tuning x -h " + target)
-
+                send = 1
+            
+            # Mail
+            if(send==1):
+                os.system("zip -r report.zip "+target.replace('://', ''))
+                os.system("bin/python3 mail.py")
+                print("Mail sent")
+            
         self.start_scan_button.configure(text="Start scan")
         self.start_scan_button.configure(fg_color=color)
         self.start_scan_button.configure(hover=True)
@@ -233,9 +243,7 @@ class App(customtkinter.CTk):
                 target = line.strip()
                 
                 # Check if the target is valid
-                if not target or not (re.match(r'^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$', target) 
-                                      or target.startswith("http://") 
-                                      or target.startswith("https://")):
+                if not target or not(target.startswith("http://") or target.startswith("https://")):
                     # Skip invalid targets
                     continue
 
@@ -252,32 +260,18 @@ class App(customtkinter.CTk):
                 checkbox1.grid(row=i-1, column=1, padx=10, pady=(0, 10))
                 self.scrollable_frame_checkboxes1.append(checkbox1)
 
-                if re.match(r'^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$', target):
-                    # Enable only Nikto checkbox for IPs
-                    checkbox2 = customtkinter.CTkCheckBox(master=self.scrollable_frame, text="WPPen", font=customtkinter.CTkFont(size=15), state="disabled")
-                    checkbox2.grid(row=i-1, column=2, padx=10, pady=(0, 10))
-                    self.scrollable_frame_checkboxes2.append(checkbox2)
+                # Enable all checkboxes for URLs
+                checkbox2 = customtkinter.CTkCheckBox(master=self.scrollable_frame, text="WPPen", font=customtkinter.CTkFont(size=15))
+                checkbox2.grid(row=i-1, column=2, padx=10, pady=(0, 10))
+                self.scrollable_frame_checkboxes2.append(checkbox2)
+                
+                checkbox3 = customtkinter.CTkCheckBox(master=self.scrollable_frame, text="Artemis", font=customtkinter.CTkFont(size=15))
+                checkbox3.grid(row=i-1, column=3, padx=10, pady=(0, 10))
+                self.scrollable_frame_checkboxes3.append(checkbox3)
 
-                    checkbox3 = customtkinter.CTkCheckBox(master=self.scrollable_frame, text="Artemis", font=customtkinter.CTkFont(size=15), state="disabled")
-                    checkbox3.grid(row=i-1, column=3, padx=10, pady=(0, 10))
-                    self.scrollable_frame_checkboxes3.append(checkbox3)
-
-                    checkbox4 = customtkinter.CTkCheckBox(master=self.scrollable_frame, text="Zap", font=customtkinter.CTkFont(size=15), state="disabled")
-                    checkbox4.grid(row=i-1, column=4, padx=10, pady=(0, 10))
-                    self.scrollable_frame_checkboxes4.append(checkbox4)
-                else:
-                    # Enable all checkboxes for URLs
-                    checkbox2 = customtkinter.CTkCheckBox(master=self.scrollable_frame, text="WPPen", font=customtkinter.CTkFont(size=15))
-                    checkbox2.grid(row=i-1, column=2, padx=10, pady=(0, 10))
-                    self.scrollable_frame_checkboxes2.append(checkbox2)
-
-                    checkbox3 = customtkinter.CTkCheckBox(master=self.scrollable_frame, text="Artemis", font=customtkinter.CTkFont(size=15))
-                    checkbox3.grid(row=i-1, column=3, padx=10, pady=(0, 10))
-                    self.scrollable_frame_checkboxes3.append(checkbox3)
-
-                    checkbox4 = customtkinter.CTkCheckBox(master=self.scrollable_frame, text="Zap", font=customtkinter.CTkFont(size=15))
-                    checkbox4.grid(row=i-1, column=4, padx=10, pady=(0, 10))
-                    self.scrollable_frame_checkboxes4.append(checkbox4)
+                checkbox4 = customtkinter.CTkCheckBox(master=self.scrollable_frame, text="Zap", font=customtkinter.CTkFont(size=15))
+                checkbox4.grid(row=i-1, column=4, padx=10, pady=(0, 10))
+                self.scrollable_frame_checkboxes4.append(checkbox4)
 
 # Check if email format is correct
 def is_valid_email(email):
