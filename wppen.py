@@ -36,7 +36,7 @@ target = sys.argv[1]
 
 filename = target.replace('://', '')+'/wpscan'
 # --plugins-detection mixed
-cmd = 'wpscan --url '+target+' --ignore-main-redirect -o '+filename+'.json -f json'
+cmd = 'wpscan --url '+target+' --ignore-main-redirect --plugins-detection mixed -o '+filename+'.json -f json'
 #print(cmd+'\n')
 os.system(cmd)
 f = open(filename+'.json')
